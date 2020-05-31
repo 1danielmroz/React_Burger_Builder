@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import axios from '../../axios-orders';
 import Spinner from "../../components/UI/Spiner/Spiner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler"; 
-import * as actionTypes from '../../store/actions';
+import * as actionTypes from '../../store/actions/actionsTypes';
 
 
 
