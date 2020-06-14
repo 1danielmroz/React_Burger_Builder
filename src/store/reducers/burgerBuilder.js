@@ -1,5 +1,7 @@
 
 import * as actionTypes from '../actions/actionsTypes';
+import {UpdateObject} from '../utilliti';
+
 
 const initialState = {
     ingredients: null,
@@ -18,14 +20,13 @@ const INGREDIENT_PRICES={
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_INGREDIENT:
-            return {
-                ...state,
-                ingredients:{
-                    ...state.ingredients,
-                    [action.ingredientName]:state.ingredients[action.ingredientName]+1
-                },
+            const updatedIngredient ={ [action.ingredientName]:state.ingredients[action.ingredientName]+1};
+            const updatedIngredients =UpdateObject(state.ingredients,updatedIngredient)
+            const updatedState ={
+                ingredients:updatedIngredients,
                 totalPrice:state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
-            };
+            }
+            return  UpdateObject(state,updatedState);
         case actionTypes.REMOVE_INGREDIENT:
             return {
                 ...state,
@@ -39,6 +40,7 @@ const reducer = (state = initialState, action) => {
                 return{
                     ...state,
                     ingredients:action.ingredients,
+                    totalPrice:4,
                     error:false
                 };
                 case actionTypes.FETCH_INGREDIENTS_FAILED:
