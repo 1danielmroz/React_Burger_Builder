@@ -1,47 +1,62 @@
 import * as actionTypes from './actionsTypes';
 import axios from 'axios';
 
-export const authStart =() =>{
+export const authStart = () => {
     return {
-        type:actionTypes.AUTH_START
+        type: actionTypes.AUTH_START
     };
 }
 
-export const authSuccess = (token,userId)=>{
+export const authSuccess = (token, userId) => {
     return {
-        type:actionTypes.AUTH_SUCCESS,
-        token:token,
-        userId:userId
+        type: actionTypes.AUTH_SUCCESS,
+        token: token,
+        userId: userId
     };
 }
 
-export const authFail = (error) =>{
+export const authFail = (error) => {
     return {
         type: actionTypes.AUTH_FAIL,
-        error:error
+        error: error
     };
 }
 
-export const auth=(email,password,isSignup)=>{
-    return dispatch=>{
+export const logout = () => {
+    return {
+        type: actionTypes.AUTH_LOGOUT
+    };
+};
+
+export const checkAuthTimeout = (expirationTime) => {
+    return dispatch => {
+        setTimeout(() => {
+            dispatch(logout());
+        }, expirationTime*1000);
+    };
+};
+
+export const auth = (email, password, isSignup) => {
+    return dispatch => {
         dispatch(authStart());
-        const authData={
-            email:email,
-            password:password,
-            returnSecureToken:true
+        const authData = {
+            email: email,
+            password: password,
+            returnSecureToken: true
         }
-        let url ='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDlsWu9qYWfVxGW1ZqQRQCrcGLEYYzD4ac';
-        if(!isSignup){
-            url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDlsWu9qYWfVxGW1ZqQRQCrcGLEYYzD4ac';
+        let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDlsWu9qYWfVxGW1ZqQRQCrcGLEYYzD4ac';
+        if (!isSignup) {
+            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDlsWu9qYWfVxGW1ZqQRQCrcGLEYYzD4ac';
         }
-        axios.post(url,authData)
-        .then(response =>{
-            console.log(response);
-            dispatch(authSuccess(response.data.idToken,response.data.localId));
-        })
-        .catch(err=>{
-            console.log(err);
-            dispatch(authFail(err)); 
-        })
+        axios.post(url, authData)
+            .then(response => {
+                console.log(response);
+                dispatch(authSuccess(response.data.idToken, response.data.localId));
+                dispatch(checkAuthTimeout(response.data.expiresIn));
+            })
+            .catch(err => {
+                console.log(err);
+                dispatch(authFail(err.response.data.error));
+            })
     }
 }
