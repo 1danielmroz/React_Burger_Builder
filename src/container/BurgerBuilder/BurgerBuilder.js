@@ -15,7 +15,7 @@ import * as burgerBuildeActiobns from '../../store/actions/index';
 
 
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
 
     state = {
         // ingredients: null,
@@ -94,7 +94,7 @@ class BurgerBuilder extends Component {
             orderSummary = <OrderSummary
                 ingredients={this.props.ings}
                 purchaseContinue={this.purchaseContinueHandler}
-                price={this.props.price.toFixed(2)}
+                price={this.props.price}
                 purchaseCancell={this.purchaseCancelHandler} />;
         }
 
