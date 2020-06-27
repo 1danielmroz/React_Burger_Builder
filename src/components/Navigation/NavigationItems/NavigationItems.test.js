@@ -8,7 +8,7 @@ import NavigationItem from './NavItem/NavigationItem';
 
 
 configure({adapter: new Adapter()});
-
+//https://jestjs.io/docs/en/expect <-more
 describe('<NavigationItems/>', ()=>{
 
     let wrapper;
@@ -23,6 +23,11 @@ describe('<NavigationItems/>', ()=>{
     it('should render three <NavigationItems> Element if authenticated',()=>{ 
         wrapper.setProps({isAuthenticated:true});
         expect(wrapper.find(NavigationItem)).toHaveLength(3);
+    });
+
+    it('should render  <NavigationItems> Element Contains Logout',()=>{ 
+        wrapper.setProps({isAuthenticated:true}); 
+        expect(wrapper.contains(<NavigationItem  link="/logout">Logout</NavigationItem>)).toEqual(true);
     });
 
 });
